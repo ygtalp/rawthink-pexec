@@ -1,0 +1,15 @@
+{
+  "name": "rawthink",
+  "owner": { "name": "Yigit Alp Unal" },
+  "metadata": {
+    "description": "Workflow tooling for Claude Code — phase-by-phase execution with independent verification gates.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "rawthink-pexec",
+      "source": "./plugins/rawthink-pexec",
+      "description": "Phase-by-phase execution for AI coding agents: spec, verify, implement, close — each in its own session, with a gate the implementer cannot skip."
+    }
+  ]
+}

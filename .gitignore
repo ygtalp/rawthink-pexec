@@ -1,0 +1,12 @@
+# Local pexec state — this repo distributes the pipeline, it does not run it
+.pexec.yml
+.planning/
+.claude/rules/*-lessons.md
+.claude/rules/*-core-rules.md
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

@@ -1,0 +1,28 @@
+milestone: remediation
+paths:
+  plan:       .planning/remediation-phases/remediation-plan.md
+  phases_dir: .planning/remediation-phases
+  summaries:  .planning/remediation-phases/summaries
+  active:     .planning/remediation-phases/activeContext.md
+  preflight:  .planning/remediation-phases/preflight.md
+  core_rules: .claude/rules/remediation-core-rules.md
+  lessons:    .claude/rules/remediation-lessons.md
+  # templates: (unset — resolved automatically; see .pexec.example.yml)
+  memory_md:  .planning/remediation-phases/MEMORY.md
+project:
+  language: java
+  branch:   master
+  compile:  "mvn -pl <service> -am clean compile"
+  test:     "mvn -pl <service> test"
+integration_checkpoints:
+  - docker-compose.yml
+  - src/main/resources/db/changelog/db.changelog-master.xml
+  - <service>/.../config/SecurityConfig.java
+  - <service>/.../client/*Client.java
+must_read:
+  - pom.xml
+  - <service>/pom.xml
+  - <service>/.../Application.java
+optional_mcp:
+  codegraph: true
+  rawthink:  true

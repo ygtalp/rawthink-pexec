@@ -1,0 +1,28 @@
+milestone: v2
+paths:
+  plan:       .planning/v2-phases/plan.md
+  phases_dir: .planning/v2-phases
+  summaries:  .planning/v2-phases/summaries
+  active:     .planning/v2-phases/activeContext.md
+  preflight:  .planning/v2-phases/preflight.md
+  core_rules: .claude/rules/v2-core-rules.md
+  lessons:    .claude/rules/v2-lessons.md
+  # templates: (unset — resolved automatically; see .pexec.example.yml)
+  memory_md:  .planning/v2-phases/MEMORY.md
+project:
+  language: python
+  branch:   hardening/v2
+  compile:  "ruff check --select F,E9 <package>"
+  test:     "pytest"
+integration_checkpoints:
+  - <package>/server.py
+  - pyproject.toml
+  - <package>/config.py
+  - .gitignore
+must_read:
+  - <package>/server.py
+  - <package>/config.py
+  - pyproject.toml
+optional_mcp:
+  codegraph: true
+  rawthink:  false

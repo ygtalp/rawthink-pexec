@@ -1,0 +1,28 @@
+milestone: v3
+paths:
+  plan:       .planning/v3-phases/v3plan.md
+  phases_dir: .planning/v3-phases
+  summaries:  .planning/v3-phases/summaries
+  active:     .planning/v3-phases/activeContext.md
+  preflight:  .planning/v3-phases/preflight.md
+  core_rules: .claude/rules/v3-core-rules.md
+  lessons:    .claude/rules/v3-lessons.md
+  # templates: (unset — resolved automatically; see .pexec.example.yml)
+  memory_md:  .planning/v3-phases/MEMORY.md
+project:
+  language: csharp
+  branch:   master
+  compile:  "Unity batchmode compile — 0 errors"
+  test:     "Unity EditMode test runner — all pass"
+integration_checkpoints:
+  - Assets/Scripts/.../SimulationConfigFactory.cs
+  - Assets/Scripts/.../SceneSetupHelper.cs
+  - Assets/Scripts/.../GameManager.cs
+  - Assets/Scripts/.../GameSessionData.cs
+must_read:
+  - Assets/Scripts/Simulation/SimulationDefinitions.cs
+  - Assets/Scripts/Simulation/SimulationState.cs
+  - Assets/Scripts/Simulation/SimulationConfig.cs
+optional_mcp:
+  codegraph: true
+  rawthink:  true

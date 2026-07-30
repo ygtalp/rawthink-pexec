@@ -1,0 +1,61 @@
+# rawthink-pexec — project configuration
+# Copy to .pexec.yml at your project root. Every command reads this file.
+# Nothing else in this repo is project-specific.
+#
+# Placeholder resolution in the command files:
+#   {milestone}                 → the top-level `milestone` value
+#   {plan} {phases_dir} ...     → the matching key under `paths:`
+#   {compile} {test} {branch}   → the matching key under `project:`
+#   {N} {date} {count} ...      → filled in at runtime, not from this file
+
+milestone: v3                 # every default path below derives from this
+
+paths:
+  plan:        .planning/{milestone}-phases/{milestone}-plan.md
+  phases_dir:  .planning/{milestone}-phases
+  summaries:   .planning/{milestone}-phases/summaries
+  active:      .planning/{milestone}-phases/activeContext.md
+  preflight:   .planning/{milestone}-phases/preflight.md
+  core_rules:  .claude/rules/{milestone}-core-rules.md
+  lessons:     .claude/rules/{milestone}-lessons.md
+  memory_md:   .planning/{milestone}-phases/MEMORY.md
+
+  # OPTIONAL override. Leave unset unless the templates live somewhere unusual.
+  # /plan-init resolves them in this order:
+  #   1. this key, if set
+  #   2. ${CLAUDE_PLUGIN_ROOT}/templates/   (plugin install)
+  #   3. .claude/pexec-templates/           (manual install)
+  #   4. templates/ next to the command file (running from a clone)
+  # templates:
+
+# `paths.plan` is where /plan-init COPIES the plan to — not where it looks for
+# it. Plan mode output normally lands in ~/.claude/plans/ with a generated
+# name; plan-init finds it, copies it here, and the copy becomes authoritative.
+#
+# All these are defaults, not requirements. Point any key at wherever your
+# files already live — an existing project does not need to be rearranged.
+
+project:
+  language: csharp            # csharp | java | python | ts | go | ...
+  branch:   master            # branch to commit phases on
+  # "compile" means whatever proves the code is valid in THIS project.
+  # spec-implement runs these literally, so make them exact.
+  compile:  "<your build command>"
+  test:     "<your test command>"
+
+# Files every spec must either update or explicitly mark
+# "NO CHANGES NEEDED + rationale".
+integration_checkpoints:
+  - <wiring / composition root>
+  - <configuration factory>
+  - <persistence or schema entry point>
+
+# Files spec-create must ALWAYS read to verify real APIs before writing code.
+must_read:
+  - <core type definitions>
+  - <main pipeline / orchestrator>
+  - <abstract base classes>
+
+optional_mcp:
+  codegraph: false            # code intelligence: blast radius before writing a spec
+  rawthink:  false            # decision archive: record why, not just what
