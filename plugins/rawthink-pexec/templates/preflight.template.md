@@ -40,8 +40,20 @@ them separate belongs in the plan.
 
 ## 3. Claim verification
 
-- [ ] Assumptions in the plan that were never actually checked — check them now
-- [ ] Anything found to be false: correct the plan before phase 1
+Populated by `/plan-init` from the plan's **Unverified assumptions** table, plus
+anything carried forward from the previous milestone's review.
+
+| Assumption | How to check it | Result |
+|---|---|---|
+| {claim} | {command or test} | ☐ holds / ☐ FALSE |
+
+- [ ] Every row checked by RUNNING something, not by reading documentation
+- [ ] Anything found FALSE: correct the plan before phase 1, and record the
+      correction — a plan quietly edited after a failed check loses the fact
+      that the check happened
+
+An empty table means the plan declared no unverified assumptions. Confirm that
+is true, rather than that nobody filled it in.
 
 ## 4. Project-specific
 

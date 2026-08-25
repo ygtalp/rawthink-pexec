@@ -25,6 +25,16 @@ there is no conversation to scroll back to.
 
 Read `{active}`. Check for remnants of a previous attempt at this phase.
 
+If `{active}` shows `verify FAILED` for phase {N}, read
+`{phases_dir}/phase-{N}-review.md` before writing anything. Its blocking
+violations are REQUIRED INPUT: the new spec must address each one explicitly,
+and you must say where. Rewriting from the plan alone reproduces the same spec
+and earns the same verdict.
+
+If `{active}` carries three or more `verify FAILED` lines for phase {N}, STOP.
+Three rejections is not a spec problem — the phase scope is probably wrong, and
+that is a question for the plan, not another rewrite.
+
 If `{N}` is the first phase, read `{preflight}`. If its status is not
 `COMPLETE`, STOP and tell the user which pre-flight items are outstanding.
 Baseline measurements cannot be taken after the fix lands.
@@ -53,6 +63,39 @@ reproduce them, because you are about to re-derive code from live source.
 
 Do not repeat any of them. `spec-verify` treats a repeated lesson as a
 BLOCKING violation.
+
+## Step 3b: Check what was already rejected
+
+**Always:** the dependency summaries you already read in Step 2 carry a
+`## Decision Record` section — use those. For non-dependency phases, extract ONLY
+that section from their summaries; do not read the summaries in full.
+
+**Additionally, if `optional_mcp.rawthink` is enabled:** query the decision
+archive for decisions whose `touches` overlaps this phase's key files, and read
+their `rejected` fields. This reaches decisions from earlier milestones, which
+summaries in this milestone cannot carry.
+
+**Read both; do not pick one.** `post-phase` writes the record according to the
+flag as it stood at the time, so a phase recorded under one setting is invisible
+to a reader that consults only the other. Toggling the integration mid-milestone,
+in either direction, would otherwise blind this step to every phase recorded
+before the switch — which is exactly when a rejected approach comes back.
+
+At phase 1 there is nothing to read here — `{summaries}` is empty and the
+archive holds nothing for this milestone. That is expected, not an error.
+
+This step adds one short section per phase, not a second pass over files you
+have already read. The context rules above still hold: each file once, and
+nothing read whole that can be read in part.
+
+Do not propose an approach a prior phase rejected. If you believe the constraint
+that eliminated it no longer holds, say so in the spec's Provenance section and
+name the decision you are overriding. Silently re-proposing it is how a settled
+question gets re-litigated in phase 12.
+
+A rejected alternative is not a lesson. Lessons are traps in the code; this is a
+design choice that was considered and declined. `spec-verify` does not gate on
+these — which is exactly why reading them here matters.
 
 ## Step 4: Read format reference
 

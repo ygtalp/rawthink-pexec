@@ -5,6 +5,7 @@ paths:
   summaries:  .planning/v2-phases/summaries
   active:     .planning/v2-phases/activeContext.md
   preflight:  .planning/v2-phases/preflight.md
+  review:     .planning/v2-phases/milestone-review.md
   core_rules: .claude/rules/v2-core-rules.md
   lessons:    .claude/rules/v2-lessons.md
   # templates: (unset — resolved automatically; see .pexec.example.yml)

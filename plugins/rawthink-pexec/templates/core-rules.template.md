@@ -124,7 +124,8 @@ triggered is too broad. Adjust after a few phases.
 
 ## Decision Record
 - decided / rejected / because / touches
-  (only if the decision archive is disabled — otherwise it lives there)
+  (ALWAYS — the archive is for cross-milestone recall; this is what the next
+  phase actually reads)
 
 ## Note for the next phase
 - {what phase N+1 can rely on}

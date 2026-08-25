@@ -16,6 +16,7 @@ paths:
   summaries:   .planning/{milestone}-phases/summaries
   active:      .planning/{milestone}-phases/activeContext.md
   preflight:   .planning/{milestone}-phases/preflight.md
+  review:      .planning/{milestone}-phases/milestone-review.md
   core_rules:  .claude/rules/{milestone}-core-rules.md
   lessons:     .claude/rules/{milestone}-lessons.md
   memory_md:   .planning/{milestone}-phases/MEMORY.md

@@ -5,6 +5,7 @@ paths:
   summaries:  .planning/remediation-phases/summaries
   active:     .planning/remediation-phases/activeContext.md
   preflight:  .planning/remediation-phases/preflight.md
+  review:     .planning/remediation-phases/milestone-review.md
   core_rules: .claude/rules/remediation-core-rules.md
   lessons:    .claude/rules/remediation-lessons.md
   # templates: (unset — resolved automatically; see .pexec.example.yml)

@@ -75,8 +75,16 @@ If a prior decision is now wrong, mark it invalidated with a pointer to this
 one. Do not delete it. An archive that forgets its own reversals cannot answer
 "why did we change our mind".
 
-If `optional_mcp.rawthink` is disabled, write the same fields into the summary
-under a `## Decision Record` heading. The pipeline must not require the tool.
+Write these fields into the summary under a `## Decision Record` heading
+REGARDLESS of whether the archive is enabled. The duplication is deliberate.
+
+`/spec-create` reads summaries; nothing reads the archive during a phase. If the
+record only goes to the archive, enabling the integration REMOVES the rejected
+alternatives from the only place a later phase would find them — the optional
+tool would make the pipeline see less, not more.
+
+The archive is for cross-milestone recall and queries. The summary is for the
+next phase. Both are needed, and the pipeline must not require the tool.
 
 ## Step 6: Update the milestone memory file
 
@@ -113,6 +121,10 @@ No new traps? Skip this step.
 ## Time: {date}
 ## Next: Phase {N+1}
 ```
+
+**If phase {N} is the last phase in `{plan}`, write `## Next: /milestone-close`
+instead.** There is no phase {N+1}. Pointing at one leaves the milestone looking
+open when it is finished, and the closing step never gets run.
 
 Rewriting `{active}` is correct — it is a status file, not a log. Verdicts and
 reports live in their own per-phase files and are not affected.

@@ -15,9 +15,10 @@ DELETE THIS BLOCK, INCLUDING BOTH MARKERS, WHEN GENERATING.
 **Date:**
 **Scope:** one or two sentences — what this milestone changes, and what it
 deliberately does not.
-**Research base:** the audit, runbook or investigation this plan distils. Name
-it, then leave it behind: it is a derivation document, not an execution
-artifact, and nothing in the pipeline reads it again.
+**Research base:** the derivation document this plan distils, written from
+`derivation-doc.template.md`. Name it, then leave it behind: it is a derivation
+document, not an execution artifact, and nothing in the pipeline reads it again.
+Its unverified-assumptions and known-traps sections are consumed below.
 **Current state:** where the codebase is today, in the terms this milestone
 will change.
 
@@ -54,6 +55,25 @@ and the groups have an order.
 **Ordering rules that must not be broken** — state them explicitly, with the
 reason. For example: a measurement phase must precede the phase that changes
 what it measures, or the before/after is meaningless.
+
+---
+
+## Unverified assumptions
+
+Claims this plan rests on that nobody has actually checked. From the derivation
+document, plus any `epistemic: hypothesis` decisions carried in from the
+previous milestone's review.
+
+| Assumption | How to check it | What breaks if false |
+|---|---|---|
+| {claim} | {the command or test that settles it} | {what this plan gets wrong} |
+
+`/plan-init` copies this table into pre-flight Step 3. Each entry is checked
+before phase 1 runs.
+
+An empty table means every claim in this plan was verified against something
+that executes. That is rare. If it is empty because nobody looked, pre-flight
+has nothing to check and the first false assumption surfaces in phase 6.
 
 ---
 
@@ -135,6 +155,21 @@ without asking you what you meant.
 
 1.
 2.
+
+---
+
+## Out of pipeline
+
+Work that shares this milestone's calendar but is not planned here.
+
+| Work | Estimated load | Why it is not planned here |
+|---|---|---|
+
+Requirements that are not knowable at planning time cannot be specified, and
+`/post-phase` validating against a plan written blind validates nothing. Naming
+the work keeps it out of the pipeline while keeping the calendar honest.
+
+Leave empty if the milestone owns all of its weeks.
 
 ---
 

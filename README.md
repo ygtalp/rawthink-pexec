@@ -1,7 +1,8 @@
 # rawthink-pexec
 
-Phase-by-phase execution for AI coding agents. Five commands, one contract per
-phase, a verification gate the implementer cannot skip.
+Phase-by-phase execution for AI coding agents. Six commands, one contract per
+phase, a verification gate the implementer cannot skip, and two manual gates
+that bracket the milestone.
 
 **No runtime, no dependencies, no MCP server.** The whole thing is markdown.
 
@@ -20,9 +21,11 @@ produced it has scrolled away.
 ## The shape
 
 ```
+   derivation doc          upstream — the argument the plan is derived from
+   ↓
 /plan-init <milestone>     once — import the plan, scaffold, generate rules
    ↓
-   pre-flight              once, manual — baselines and backups
+   pre-flight              once, manual — baselines, backups, claim checks
    ↓
 /spec-create N             write the contract          ← new session
 /spec-verify N             try to break it             ← new session
@@ -30,6 +33,10 @@ produced it has scrolled away.
 /post-phase N              audit, summarise, record    ← new session
    ↓
    repeat for N+1
+   ↓
+/milestone-close           once, after the last phase  ← new session
+   ↓
+   milestone review        manual gate — blocks the next /plan-init
 ```
 
 **Each step runs in its own session.** That is the load-bearing decision.
@@ -108,6 +115,9 @@ always works.
 /rawthink-pexec:plan-init <milestone>
 # complete pre-flight, then:
 /rawthink-pexec:spec-create 1
+# ... phases ...
+# after the last phase:
+/rawthink-pexec:milestone-close
 ```
 
 Plugin commands are namespaced `/<plugin>:<command>`. Typing the short form
@@ -120,7 +130,17 @@ all of them behave identically from here on.
 
 ## Where the plan comes from
 
-Write it with Claude Code's plan mode. Point plan mode at
+The plan is derived from a **derivation document** — written first, in a session
+that can search, from `templates/derivation-doc.template.md`. Plan mode derives
+structure from live source: file layout, symbol names, the call graph. It cannot
+derive what the domain requires, why one approach beat another, or which claims
+nobody has checked.
+
+Two of that document's sections are consumed downstream: unverified assumptions
+become pre-flight's claim checks, and code-anchored traps seed the lessons file.
+The rest is read once, by whoever writes the plan, and never again.
+
+Then write the plan with Claude Code's plan mode. Point plan mode at
 `templates/plan.template.md` and ask for a milestone plan in that shape — the
 output then passes `/plan-init` validation on the first try.
 
@@ -137,7 +157,7 @@ later plan mode run adds to it. `/post-phase` re-reads the plan on every phase,
 so across twenty phases the document phase 20 validates against must be the one
 phase 1 was written from. Copying freezes it and makes the project authoritative.
 
-## Five channels
+## Six channels
 
 Everything that survives between steps lives in one of these:
 
@@ -148,6 +168,7 @@ Everything that survives between steps lives in one of these:
 | `phase-{N}-impl-log.md` | what actually happened | the phase |
 | `activeContext.md` | current milestone state | the milestone |
 | `summaries/phase-{N}-summary.md` | what a later phase can rely on | forever |
+| `milestone-review.md` | what the next milestone starts from | across milestones |
 
 The verdict has its own file rather than living in `activeContext.md`.
 `activeContext.md` is a status file that later steps rewrite, and a gate whose
@@ -172,6 +193,26 @@ The L-code is not bookkeeping. `spec-verify` enforces lessons by citing them —
 an entry with no code cannot be cited, and an entry that cannot be cited is not
 enforced.
 
+## Two manual gates
+
+Pre-flight and the milestone review are the only two files a human must sign.
+Everything else is written and read by agents.
+
+They bracket the milestone. Pre-flight blocks `/spec-create 1` until state that
+cannot be recovered later has been captured. The milestone review blocks the
+NEXT `/plan-init` until someone confirms what actually happened.
+
+The symmetry is the design. A milestone that starts without a baseline cannot
+prove it worked; a milestone planned on an unreviewed close is planned on an
+agent's unchecked report. Both failures are silent, and both surface far
+downstream of where they were introduced.
+
+`/milestone-close` is a separate command rather than a branch inside
+`/post-phase` because the two have different jobs and different frequencies.
+`post-phase` runs after every phase and audits one diff. `milestone-close` runs
+once, reads every summary, re-measures the baseline, triages the lessons, and
+records what the next milestone inherits.
+
 ## Why the plan carries no code
 
 `spec-create` re-derives implementation from live source every time. A plan
@@ -185,7 +226,7 @@ re-derivation → lessons as the guardrail: the three follow from each other.
 ## Configuration
 
 Everything project-specific lives in `.pexec.yml`, core-rules and lessons. The
-five command files are identical across projects — if you find yourself editing
+six command files are identical across projects — if you find yourself editing
 one for a single project, that difference belongs in config.
 
 See `examples/` for C#/Unity, Java/Spring and Python configurations.
@@ -199,10 +240,16 @@ and pastes the answer into the spec's Blast Radius, so the file list comes from
 a tool rather than from the model's reading stamina. `spec-implement` uses it to
 confirm the right tests ran.
 
-**rawthink-mcp** — decision archive. `post-phase` records what was decided,
-what was rejected, and why. Code tells you what was chosen; nothing tells you
-what was considered and dropped, which is the question that actually gets asked
-later.
+**rawthink-mcp** — decision archive. `post-phase` records what was decided, what
+was rejected, and why. Code tells you what was chosen; nothing tells you what was
+considered and dropped, which is the question that actually gets asked later.
+`spec-create` queries it before proposing an approach, so a settled question is
+not re-litigated ten phases on.
+
+The record also goes into the phase summary either way. The archive answers
+queries across milestones; the summary is what the next phase actually reads.
+Writing to only one of them would mean enabling the integration made the
+pipeline see less.
 
 Neither is loaded during `spec-verify` or `spec-implement`. Verification that
 can excuse a gap by citing a past decision is rationalising, not verifying, and
@@ -214,9 +261,10 @@ Claude Code plugins run with your privileges, and Anthropic does not audit
 third-party marketplace content. Read what you install.
 
 For this one that is a short read: **there is no executable code in this
-repository.** Fifteen markdown and JSON files, no scripts, no hooks, no MCP
-server, no post-install step. Everything it does, it does by instructing an
-agent you are already running — and you see every action in your transcript.
+repository.** Sixteen markdown and JSON files plus four YAML examples, no
+scripts, no hooks, no MCP server, no post-install step. Everything it does, it
+does by instructing an agent you are already running — and you see every action
+in your transcript.
 
 ## Status
 

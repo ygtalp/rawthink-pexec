@@ -37,6 +37,38 @@ success without ever building anything.
 
 Resolve every `{...}` path from this file before continuing.
 
+## Step 0b: Previous milestone gate
+
+**Identify the predecessor first.** Glob `.planning/*-phases/` for directories
+other than this milestone's, and treat one as the predecessor only if it
+contains a `*-plan.md`. If this project points `paths.review` somewhere outside
+`.planning/`, ask the user where the previous milestone's files live — the glob
+assumes the default layout and silently finds nothing otherwise.
+
+Milestone names do not sort (`v1`, `v2`, `remediation`, `v3`), so:
+
+- **No such directory** — this is genuinely the first milestone. Continue.
+- **Exactly one** — that is the predecessor.
+- **More than one** — ask the user which one this milestone follows. Do not
+  guess from names or timestamps.
+
+Then check the predecessor for `milestone-review.md`:
+
+- **`STATUS: COMPLETE`** — continue, and read it. Steps 3, 6, 7 and 8 use it.
+- **`STATUS: PENDING`** — STOP. Say which milestone is unclosed and that a human
+  must review it and mark it COMPLETE.
+- **Missing entirely** — the previous milestone was never closed. STOP and offer
+  two paths: run `/milestone-close` on it first, or proceed without it and
+  accept that this milestone inherits no lessons, no external-surface list and
+  no carried assumptions. Do not proceed silently.
+
+The distinction matters. "No review file" does not mean "first milestone" — it
+much more often means someone skipped the close, which is exactly what this
+gate exists to catch.
+
+A milestone planned on an unreviewed close is planned on an agent's unchecked
+report. This is the same gate pre-flight applies at the other end.
+
 ## Step 1: Resolve the templates directory
 
 Find the template files. Try in order and use the first that exists:
@@ -90,6 +122,23 @@ milestone that is already running. `/post-phase` re-reads the plan on every
 phase — across twenty phases, the document phase 20 validates against must be
 the same one phase 1 was written from. Copying makes the project the authority
 and freezes it.
+
+### Plan drift check
+
+If the predecessor identified in Step 0b has a plan, diff it against the new
+plan SECTION BY SECTION and report what disappeared:
+
+- sections present before and absent now
+- tables that lost rows
+- open decisions that vanished with no recorded closure
+- scope statements that are no longer there
+
+Report only; restore nothing. Deleting is often correct — deleting silently is
+not. The user confirms each drop as intentional, or restores it.
+
+**Compare sections, not total size.** A plan can grow while losing content: new
+sections get added, existing ones are compressed to make room, and the byte count
+rises the whole time. Growth is not evidence that nothing was lost.
 
 ## Step 4: Validate the plan
 
@@ -147,6 +196,17 @@ project-specific slots by reading the repo:
 Ask the user rather than guessing when a slot has no obvious answer. A wrong
 rule here propagates into every spec of the milestone.
 
+If the previous milestone's review has an `## External surface` section, write
+its entries into the project-specific BLOCKING rules slot, as:
+
+> Breaking {surface} is a BLOCKING violation. It was published in {milestone}
+> and has a known consumer.
+
+Include entries marked "unknown consumer" too — unknown is not no.
+
+A repo scan finds what is public; only the milestone record shows what was
+published to someone. `plan-init` cannot derive this by reading code.
+
 ## Step 7: Generate an empty lessons file
 
 Copy `{templates}/lessons.template.md` to `{lessons}` and strip the header
@@ -161,13 +221,25 @@ pitfalls. Seed those now, each with an L-code. This matters most when the plan
 is high-level — `/spec-create` re-derives code that could reintroduce exactly
 those pitfalls.
 
+**A third way, from the previous milestone:** if its review has a
+`## Lessons to carry forward` section, seed from it and keep the numbering the
+review assigned. Those entries were triaged at close by asking whether the
+mechanism that produces each trap still exists. A CARRY entry describes a
+mechanism still in this codebase — starting with an empty lessons file means
+rediscovering it, at the cost of one more failed phase.
+
 ## Step 8: Generate the pre-flight document
 
 Copy `{templates}/preflight.template.md` to `{preflight}`. This one has no
 template header — its whole content is addressed to the human who runs
 pre-flight, so it survives generation intact.
 
-Fill it from the plan's pre-flight section if it has one. If the milestone
+Fill Step 3 (claim verification) from the plan's **Unverified assumptions**
+table, plus anything under `## Unverified assumptions carried forward` in the
+previous milestone's review. If both are empty, say so in the report — an empty
+claim-verification table is a finding, not a clean bill of health.
+
+Fill the rest from the plan's pre-flight section if it has one. If the milestone
 changes anything whose "before" state becomes unrecoverable once fixed — a
 correctness bug, a performance regression, a data migration — a baseline
 measurement is MANDATORY. Once the fix lands, "how broken was it really?" has
