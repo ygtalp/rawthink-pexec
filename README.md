@@ -21,7 +21,9 @@ produced it has scrolled away.
 ## The shape
 
 ```
-   derivation doc          upstream — the argument the plan is derived from
+   milestone map           upstream — which milestones exist, in what order
+   ↓
+   derivation doc          one milestone's argument, drawn from the map
    ↓
 /plan-init <milestone>     once — import the plan, scaffold, generate rules
    ↓
@@ -37,7 +39,9 @@ produced it has scrolled away.
 /milestone-close           once, after the last phase  ← new session
    ↓
    milestone review        manual gate — blocks the next /plan-init
-```
+   ↓
+   update the map          findings land, next milestone is planned from them
+   ↺
 
 **Each step runs in its own session.** That is the load-bearing decision.
 
@@ -130,11 +134,21 @@ all of them behave identically from here on.
 
 ## Where the plan comes from
 
-The plan is derived from a **derivation document** — written first, in a session
-that can search, from `templates/derivation-doc.template.md`. Plan mode derives
-structure from live source: file layout, symbol names, the call graph. It cannot
-derive what the domain requires, why one approach beat another, or which claims
-nobody has checked.
+Above the plan sit two documents that no command reads. Both are written and
+read by people, and both are here because the pipeline needs an upstream that
+holds still.
+
+The **milestone map** (`templates/milestone-map.template.md`) answers which
+milestones exist, in what order, and what constrains them. One row becomes one
+derivation document. It is also where `/milestone-close` findings land — the
+deviations, the false assumptions and the questions a milestone raised and did
+not answer, none of which any command consumes.
+
+The plan is derived from a **derivation document** — one milestone's row, worked
+out in a session that can search, from `templates/derivation-doc.template.md`.
+Plan mode derives structure from live source: file layout, symbol names, the
+call graph. It cannot derive what the domain requires, why one approach beat
+another, or which claims nobody has checked.
 
 Two of that document's sections are consumed downstream: unverified assumptions
 become pre-flight's claim checks, and code-anchored traps seed the lessons file.
@@ -207,6 +221,12 @@ prove it worked; a milestone planned on an unreviewed close is planned on an
 agent's unchecked report. Both failures are silent, and both surface far
 downstream of where they were introduced.
 
+Closing a milestone also produces findings that no command consumes: what
+deviated, what the baseline says now, what turned out false, what is still open.
+Those go to the milestone map, and the next milestone is planned from the
+updated map rather than from the one written before any of it was known. That
+step is manual and it is the only thing that closes the loop.
+
 `/milestone-close` is a separate command rather than a branch inside
 `/post-phase` because the two have different jobs and different frequencies.
 `post-phase` runs after every phase and audits one diff. `milestone-close` runs
@@ -261,7 +281,7 @@ Claude Code plugins run with your privileges, and Anthropic does not audit
 third-party marketplace content. Read what you install.
 
 For this one that is a short read: **there is no executable code in this
-repository.** Sixteen markdown and JSON files plus four YAML examples, no
+repository.** Seventeen markdown and JSON files plus four YAML examples, no
 scripts, no hooks, no MCP server, no post-install step. Everything it does, it
 does by instructing an agent you are already running — and you see every action
 in your transcript.

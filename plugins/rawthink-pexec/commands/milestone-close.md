@@ -123,7 +123,28 @@ Write these into `## Unverified assumptions carried forward`. This section
 becomes the next milestone's pre-flight Step 3 input — the slot that has,
 until now, had no producer.
 
-## Step 6: Write the review
+## Step 6: Mark what the map has to absorb
+
+Three of this review's sections have no downstream command that reads them —
+the baseline comparison, the deviations, and the questions still open. They are
+for a person, and the person needs somewhere to put the consequence.
+
+That place is the milestone map. Under `## For the milestone map`, list only
+what changes it:
+
+- a deviation that moves work into or out of a later milestone
+- an assumption that turned out false and invalidates a later row
+- a question still open that belongs in the map's open decisions
+- an estimate this milestone proved wrong, if the same kind of work recurs later
+
+Write the finding, not the fix. "v2's transliteration estimate assumed X, which
+was false" belongs here; "reduce v2 to 10 weeks" does not — that is the map
+owner's call, and a recommendation written here arrives in the map as a fact.
+
+If nothing changes the map, say so. That is a real and common outcome, and
+stating it is what makes the section trustworthy when it is not empty.
+
+## Step 7: Write the review
 
 Write `{review}` from `milestone-review.template.md`.
 
@@ -134,7 +155,7 @@ That gate is the point. Everything above is a report by an agent that read
 files; a human deciding "yes, this is what happened" is what makes it usable as
 the next milestone's foundation.
 
-## Step 7: Update active context
+## Step 8: Update active context
 
 Overwrite `{active}`:
 
@@ -146,7 +167,7 @@ Overwrite `{active}`:
 ## Next: review milestone-review.md, then /plan-init <next-milestone>
 ```
 
-## Step 8: Report
+## Step 9: Report
 
 ```
 ### MILESTONE-CLOSE — {milestone}
@@ -160,8 +181,10 @@ Overwrite `{active}`:
 **External surface:**  {count} entries, {K} with known consumers
 **Open assumptions:**  {count} carried forward
 **Review file:**       written, STATUS: PENDING
+**For the map:**       {count} findings | nothing changes the map
 
-Next: a human sets STATUS to COMPLETE, then /plan-init <next-milestone>
+Next: a human sets STATUS to COMPLETE, updates the milestone map if the review
+flagged anything, then /plan-init <next-milestone>
 ```
 
 Report only. Do not start the next milestone — a closing audit that opens the

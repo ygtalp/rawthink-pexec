@@ -1,0 +1,201 @@
+# {project} — Milestone Map
+
+**Version:** {n}
+**Date:**
+**Covers:** {period, or "until X ships"}
+
+The layer above the pipeline. It answers one question — **which milestones
+exist, in what order, and what constrains them** — and hands each one to a
+derivation document.
+
+No command reads this file. Like the derivation document, it is written and read
+by people. It is here because the pipeline needs an upstream that holds still,
+and because `/milestone-close` produces findings that have to land somewhere.
+
+## Why this exists
+
+A derivation document scopes ONE milestone. Nothing scopes the sequence.
+
+Without this layer, "what comes after v1" gets answered from memory or from a
+strategy document that was written before v1 started and never revised. What
+`/milestone-close` learned — a deviation, an assumption that turned out false, a
+question the milestone raised and did not answer — has nowhere to go, and the
+next milestone is planned as if none of it happened.
+
+This file is where it goes. Update it after every close, before writing the next
+derivation document.
+
+**Keep it a map, not a strategy.** Non-engineering work is named here and not
+elaborated: budgets, hiring, legal, marketing belong in whatever document you
+already keep for them. The moment this file starts arguing a business case it
+stops being readable as a map, and the milestone rows get buried.
+
+---
+
+## Purpose
+
+Two or three sentences. What is true when the last milestone on this map ships,
+that is not true today. Every milestone below is a step toward this, or it does
+not belong here.
+
+## Verified facts
+
+Constraints from outside the codebase that shape the sequence. Sourced.
+
+| Fact | Source | What it constrains |
+|---|---|---|
+| {fact} | {where it was verified} | {which milestone, or the ordering} |
+
+Facts, not assumptions. An unverified claim is not a constraint yet — it belongs
+in the milestone's derivation document, where pre-flight can check it.
+
+## Lanes
+
+Which streams of work exist, and which one the pipeline covers.
+
+| Lane | What it is | In pipeline |
+|---|---|---|
+| {A} | {description} | no |
+| {B} | {engineering} | **yes** |
+
+Exactly one lane should be marked in-pipeline. If two are, they are two projects
+sharing a repo, and the milestones below cannot be ordered against each other.
+
+The out-of-pipeline lanes appear in each milestone's derivation document under
+"work that shares the calendar" — named, estimated, not planned.
+
+## Capacity unit
+
+**One engineer-week = {N} hours.**
+
+State this even when it feels obvious. The estimates below are meaningless
+without it: "8 engineer-weeks" over 9 calendar weeks is comfortable at 15 h/wk
+and impossible at 40.
+
+Not a ceiling. More available time shortens the calendar; less stretches it.
+**Scope is fixed, the calendar flexes.**
+
+Recalibrate against real hours after the first milestone and update this line.
+An estimate that is never checked against a measurement is a guess with a number
+on it.
+
+## Milestones
+
+Each row becomes one derivation document, then one plan, then one `/plan-init`.
+
+| # | Milestone | Delivers | Est. | Calendar | Depends on |
+|---|---|---|---|---|---|
+| v1 | {name} | {what is true after} | {N} e-wk | {span} | — |
+| v2 | {name} | {what is true after} | {N} e-wk | {span} | v1 |
+
+**Load check:** divide estimate by calendar weeks. A row above 1.0
+engineer-weeks per calendar week is overloaded against the unit above, and the
+overload is easier to fix here than three months in.
+
+### {v1} — {name}
+
+**Why this one first:** the argument for its position in the sequence, not for
+the work itself. The work is argued in its derivation document.
+
+**Out of scope:** what belongs to a later milestone, and which one.
+
+*(repeat per milestone)*
+
+## Critical path
+
+```
+{decision} ──▶ {what it unblocks} ──▶ {and then}
+     │
+     └──▶ {parallel branch}
+```
+
+**Can run in parallel:** {list}
+**Strictly ordered:** {list}
+**The link that breaks most often:** {which, and what it costs}
+
+A dependency you cannot draw is a dependency you have not thought about. Redraw
+this after every close; a path that was true at v1 rarely survives to v3
+unchanged.
+
+## Open decisions
+
+| # | Decision | Due | If not made | Candidates |
+|---|---|---|---|---|
+| D1 | {question} | {milestone/date} | {consequence} | {the options} |
+
+**The candidates column is not optional.** A decision whose option set has been
+lost cannot be made — you are back to rediscovering the alternatives before you
+can choose between them. This is the single most common way an open decision
+becomes permanently open.
+
+Record each of these in the decision archive as an open question. This file is
+read by people; the archive is what a planning session queries.
+
+## Closed decisions
+
+| # | Decision | Outcome | Because | Closed in |
+|---|---|---|---|---|
+| D{n} | {question} | {what was chosen} | {the constraint that forced it} | {version} |
+
+Never delete a closed decision — move it here. The `because` column is the whole
+point: "we chose X" is recoverable from the code forever, "we did not choose Y,
+because Z" exists nowhere else and is the first thing asked when the choice is
+questioned.
+
+Record these in the archive too, with `rejected` filled in.
+
+## Risks
+
+| Risk | Early signal | Response |
+|---|---|---|
+
+The signal column is what makes this useful. A risk with no observable early
+signal is a worry, and worries do not belong on a map.
+
+## Triggered packages
+
+Work that is not scheduled and not cancelled — it happens if something happens.
+
+| Package | Trigger | Cost if triggered |
+|---|---|---|
+
+Without this section, conditional work gets deleted as "out of scope" and comes
+back as a surprise, or gets scheduled and blocks on a trigger that never fires.
+
+---
+
+## Revision log
+
+Updated after every `/milestone-close`, before the next derivation document.
+
+### {version} — {date}, after {milestone} closed
+
+**From the milestone review:**
+- Deviations that change a later milestone: {what, and which row moved}
+- Assumptions that turned out false: {what, and what it invalidates}
+- Questions still open at close: {carried into which row, or into open decisions}
+
+**Changed:** {rows, estimates, ordering}
+**Added:** {new milestones or decisions}
+**Removed:** {what, and why — never "cleaned up"}
+
+### Revision rules
+
+Four rules, each earned from a specific way this file decays:
+
+1. **Closing a decision and simplifying the document are separate passes.**
+   Tidying a table while recording an outcome is how rationale unrelated to that
+   decision gets swept out with it.
+
+2. **Diff by section, not by size.** A map can grow while losing content: new
+   sections get added, existing ones compressed to make room, and the byte count
+   rises the whole time. Growth is not evidence that nothing was lost.
+
+3. **Rationale goes to the archive, not just here.** Every revision that closes a
+   decision writes `decided` / `rejected` / `because` to the decision archive.
+   When this file is later compressed — and it will be — the archive still
+   answers "why".
+
+4. **Never remove an open decision's candidate set.** Removing the options makes
+   the decision unmakeable. If a candidate is eliminated, move it to the closed
+   table with its reason; do not delete the row.

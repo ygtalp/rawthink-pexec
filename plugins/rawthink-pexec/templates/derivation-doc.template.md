@@ -2,7 +2,14 @@
 
 **Research base for:** {milestone plan}
 **Date:**
+**Milestone map:** the map this milestone is drawn from, and which row. Name it,
+then leave it behind: take this milestone's row and the lanes marked
+in-pipeline, and nothing else. Decisions and open questions come from the
+archive, not from the map — the map is read by people, the archive by planning
+sessions.
 **Sources:** {transcripts, audits, specs, vendor docs — name them}
+**Left behind deliberately:** what the map's row mentions that this document
+does not carry, and why. One line each.
 
 Written BEFORE the plan, in a session that can search. The plan is derived from
 this; nothing in the pipeline reads this file again.
@@ -20,6 +27,11 @@ codebase" and "here is what we are going to do to it".
 code competes with the source and wins arguments it should lose, because the
 source moved and the document did not. This document carries argument and
 evidence; the spec carries code.
+
+**Record what you left behind.** Extraction is where content dies quietly: a
+scope qualifier drops, a constraint gets summarised away, and nothing downstream
+knows it existed. The header line above costs one line per omission and makes
+the loss reviewable instead of invisible.
 
 Two sections below are not optional, because two things downstream consume them
 and nothing else produces them:

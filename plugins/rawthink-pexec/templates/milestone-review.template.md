@@ -108,6 +108,23 @@ never cleared.
 Questions only. No recommendations — what to do about them is the next plan's
 job, and an opinion written here arrives in that plan as a fact.
 
+## For the milestone map
+
+The three sections above — baseline comparison, deviations, questions still open
+— have no command that reads them. This is where their consequence goes.
+
+List only what changes the map:
+
+| Finding | What it changes on the map |
+|---|---|
+| {deviation / false assumption / open question / wrong estimate} | {which row, decision or estimate} |
+
+**"Nothing changes the map"** is a valid entry and a common one. Saying it
+explicitly is what makes this section worth reading when it is not empty.
+
+Findings, not fixes. What to do about them is the map owner's decision, and a
+recommendation written here arrives in the map as a settled fact.
+
 ---
 
 **Completion:** set STATUS to COMPLETE above, with date and who reviewed it.
