@@ -19,6 +19,10 @@ deliberately does not.
 `derivation-doc.template.md`. Name it, then leave it behind: it is a derivation
 document, not an execution artifact, and nothing in the pipeline reads it again.
 Its unverified-assumptions and known-traps sections are consumed below.
+**Design inventory:** greenfield first milestones only — the inventory this
+plan's anchors come from, written from `design-inventory.template.md`. Same
+status: named, consumed once, never read again. Omit this line on a project
+that already had source.
 **Current state:** where the codebase is today, in the terms this milestone
 will change.
 
@@ -99,6 +103,13 @@ If this milestone fixes a correctness or performance defect, capture the
 - **Source:** the specific finding, with a file and symbol anchor. Point at
   real code — `ClassName.methodName()` in `path/to/file` — not at a general
   area.
+  **When the phase creates a type that does not exist yet** — normal on a
+  greenfield first milestone — there is no real code to point at, and inventing
+  one passes `/plan-init` (Step 4 checks for implementation code, not for
+  anchors that resolve) and fails in `/spec-create` Step 5. Write the anchor in
+  two parts instead: the design inventory row the type comes from, and the real
+  file this phase attaches it to. If neither exists, the phase is not ready to
+  be planned.
 - **Depends on:** phases this one needs, or "none".
 - **Goal:** one sentence. What is true when this phase is done.
 - **What to do:**

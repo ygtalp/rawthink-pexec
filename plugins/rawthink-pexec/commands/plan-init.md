@@ -149,6 +149,27 @@ Read the copy and confirm it can drive the pipeline:
 - [ ] A dependency order exists (explicit graph or stated ordering)
 - [ ] The plan contains NO implementation code
 
+**If `paths.design` is configured AND Step 0b found no predecessor**, also
+check the design inventory. Both conditions matter: the inventory exists for a
+first milestone on a project that had no source. Once a predecessor exists the
+project has source, plan mode derives anchors from it, and looking for an
+inventory that was never meant to be written would stop a milestone for a file
+nobody owes.
+
+- the file exists
+- its status is not `PENDING`
+- every `Source:` anchor in the plan resolves — the file exists, and for a
+  `MODIFY` anchor the named symbol is in it
+
+A configured-but-`PENDING` inventory means the plan was written before the
+design was settled, so its anchors were invented rather than derived. That is
+the failure this gate exists to catch, and it is invisible at every later step
+until `/spec-create` Step 5 goes looking for a file that was never there.
+
+Skip this check if either condition is unmet. Leaving the two keys in
+`.pexec.yml` after the first milestone is harmless — the predecessor test
+retires the gate on its own, so nobody has to remember to delete them.
+
 If a check fails, report which one and STOP — with one exception.
 
 **If the document is plan-shaped but at the wrong altitude** — one task's
@@ -236,7 +257,10 @@ pre-flight, so it survives generation intact.
 
 Fill Step 3 (claim verification) from the plan's **Unverified assumptions**
 table, plus anything under `## Unverified assumptions carried forward` in the
-previous milestone's review. If both are empty, say so in the report — an empty
+previous milestone's review, plus — if `paths.design` is configured — the
+design inventory's `## Design decisions resting on unverified assumptions`
+table. Those are assumptions the architecture is already built on, which makes
+them the expensive kind. If both are empty, say so in the report — an empty
 claim-verification table is a finding, not a clean bill of health.
 
 Fill the rest from the plan's pre-flight section if it has one. If the milestone

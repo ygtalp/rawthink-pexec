@@ -40,6 +40,11 @@ and nothing else produces them:
   Step 3
 - **Known traps** → `/plan-init` Step 7 → the lessons file
 
+On a greenfield first milestone a third document sits between this one and the
+plan: the design inventory, which turns this argument into type names and file
+paths by reading the skeleton. It is the only reader of section 3 below that is
+not a person.
+
 ---
 
 ## 1. What we are building and why now

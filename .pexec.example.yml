@@ -21,6 +21,13 @@ paths:
   lessons:     .claude/rules/{milestone}-lessons.md
   memory_md:   .planning/{milestone}-phases/MEMORY.md
 
+  # Greenfield only. /greenfield-init scaffolds both. /plan-init checks them
+  # for the FIRST milestone only — once a predecessor exists the gate retires
+  # itself, so these keys can stay. Delete them on a project that already had
+  # source when pexec was adopted; there was never a first-milestone skeleton.
+  skeleton_scope: docs/skeleton-scope.md
+  design:         docs/design/{milestone}-design-inventory.md
+
   # OPTIONAL override. Leave unset unless the templates live somewhere unusual.
   # /plan-init resolves them in this order:
   #   1. this key, if set
