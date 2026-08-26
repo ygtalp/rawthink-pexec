@@ -77,12 +77,17 @@ Leave the "In the skeleton as" column EMPTY. That column is the decision this
 bootstrap exists to force, and pre-filling it with a guess is how a capability
 quietly becomes someone's assumption.
 
-Leave it marked `STATUS: PENDING`.
+Leave it marked `STATUS: PENDING`. `/plan-init` refuses to run until a human
+signs it, the same way pre-flight blocks `/spec-create 1`.
 
 ## Step 4: Scaffold the design inventory
 
 Copy `{templates}/design-inventory.template.md` to `{paths.design}` and strip
 the header. Leave every table empty and `STATUS: PENDING`.
+
+**Scaffold both or neither.** `/plan-init` treats a lone scope map or a lone
+inventory as an error, because half a pair means one of them was deleted or
+never written and there is no safe way to tell which.
 
 It cannot be filled yet. Its input is the skeleton's live source, which does
 not exist until Step 5 is done by hand.

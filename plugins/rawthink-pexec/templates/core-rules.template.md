@@ -29,7 +29,11 @@ file — keep the boundary, or the two files drift into contradicting each other
    a question to ask; widening is a violation.
 5. **Signature mismatch** — overrides and implementations must match their base.
 6. **Reproduced lesson** — any L-code from the lessons file appearing again.
-7. {{project-specific blocking rules — backward compatibility, safety
+7. **Dependency direction** — {{if this project splits into modules with a
+   one-way dependency: state it as "an import from X into Y is BLOCKING", and
+   say that it covers test sources as well as main. Filled by `plan-init` from
+   the skeleton scope map. Delete this item if the project has no such split.}}
+8. {{project-specific blocking rules — backward compatibility, safety
    invariants, regulatory constraints}}
 
 ### STRONG PREFERENCE — justify in writing if missing

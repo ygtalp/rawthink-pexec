@@ -12,8 +12,13 @@ Written ONCE, per project, before any code exists. It answers one question —
 **which of the planned capabilities exist in the first skeleton, and as what**
 — and it is the only record of what was deliberately left out.
 
-No command reads this file. Like the milestone map and the derivation
-document, it is written and read by people.
+Two things read this file. `/plan-init` refuses to run while it is `PENDING`,
+and takes the dependency direction from `## Modules created` into the BLOCKING
+rules. Everything else in it is written and read by people.
+
+The signature is not ceremony. The `## Left behind deliberately` list is worth
+exactly what its signature is worth: an unsigned omission list is
+indistinguishable from one nobody wrote.
 
 ## Why this exists
 
@@ -73,8 +78,11 @@ it does not work is cheap here and expensive in phase 5.
 
 ## Modules created
 
-| Module | Purpose | Open / closed | Depends on |
-|---|---|---|---|
+| Module | Purpose | Open / closed | Depends on | Must never import |
+|---|---|---|---|---|
+
+The last column is what `/plan-init` turns into a BLOCKING rule. Leave it empty
+only if the project genuinely has no one-way boundary.
 
 **Create no empty modules.** A module with no capability mapped to it in this
 milestone is a directory that signals more than it delivers, and it will be

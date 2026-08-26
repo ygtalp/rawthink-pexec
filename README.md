@@ -197,9 +197,16 @@ either is scope that entered through design instead of planning.
 Both are consumed once and never read again, like the derivation document.
 Neither carries implementation.
 
-`/plan-init` refuses to run while the inventory is `PENDING`, and pulls its
+`/plan-init` refuses to run while either document is `PENDING`, checks that
+every anchor in the plan resolves against a real file, takes the module
+dependency direction into the BLOCKING rules, and pulls the inventory's
 assumptions into pre-flight — those are assumptions the architecture is already
 built on.
+
+It finds the two documents by presence, not by milestone number. A project that
+adds an initially empty module at v3 — a closed-source counterpart, a new
+service — is greenfield in that module even though the project is not; writing
+an inventory for it turns the check back on by itself.
 
 Skip all of this on a project that already has source. There the codebase is
 the design document, and an inventory would only be a worse copy of it.
@@ -261,8 +268,14 @@ enforced.
 
 ## Two manual gates
 
-Pre-flight and the milestone review are the only two files a human must sign.
-Everything else is written and read by agents.
+Pre-flight and the milestone review are the only two files a human must sign in
+the phase loop. Everything else in it is written and read by agents.
+
+(On a greenfield first milestone there is a third signature, upstream of the
+loop: the skeleton scope map and the design inventory. `/plan-init` will not
+run while either is `PENDING`. It is a validation rather than a loop gate — it
+happens once, before anything is executing — but it is a human signature and
+worth naming as one.)
 
 They bracket the milestone. Pre-flight blocks `/spec-create 1` until state that
 cannot be recovered later has been captured. The milestone review blocks the
@@ -302,8 +315,10 @@ command files are identical across projects — if you find yourself editing one
 for a single project, that difference belongs in config.
 
 `paths.skeleton_scope` and `paths.design` are the only greenfield-specific
-keys. They can stay: `/plan-init` checks the inventory for the first milestone
-only, and retires the check once a predecessor milestone exists.
+keys. They can stay: `/plan-init` looks for those two files by presence, so a
+milestone that has neither skips the check entirely. Keep both
+`{milestone}`-scoped — a project-wide scope map paired with a per-milestone
+inventory leaves every later milestone holding half a pair.
 
 See `examples/` for C#/Unity, Java/Spring and Python configurations.
 

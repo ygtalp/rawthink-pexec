@@ -103,13 +103,23 @@ If this milestone fixes a correctness or performance defect, capture the
 - **Source:** the specific finding, with a file and symbol anchor. Point at
   real code — `ClassName.methodName()` in `path/to/file` — not at a general
   area.
+  **Write anchors in a form that can be checked**, not just read:
+  - a **path anchor** is a backticked token containing `/` and an extension —
+    `` `src/main/java/com/x/Ledger.java` ``
+  - a **symbol anchor** is a backticked identifier, the word `in`, then a path
+    anchor — `` `Ledger.append()` `` in `` `src/main/java/com/x/Ledger.java` ``.
+    The qualifier and `()` are for the reader; the check matches on the last
+    segment, so write the form that reads clearly
+
+  A bare type name with no path is not an anchor. It reads like one, survives
+  every check, and resolves to nothing.
+
   **When the phase creates a type that does not exist yet** — normal on a
   greenfield first milestone — there is no real code to point at, and inventing
-  one passes `/plan-init` (Step 4 checks for implementation code, not for
-  anchors that resolve) and fails in `/spec-create` Step 5. Write the anchor in
-  two parts instead: the design inventory row the type comes from, and the real
-  file this phase attaches it to. If neither exists, the phase is not ready to
-  be planned.
+  one passes the plan checks and fails in `/spec-create` Step 5. Write the
+  anchor in two parts instead: the design inventory row the type comes from,
+  and a path anchor for the real file this phase attaches it to. If neither
+  exists, the phase is not ready to be planned.
 - **Depends on:** phases this one needs, or "none".
 - **Goal:** one sentence. What is true when this phase is done.
 - **What to do:**

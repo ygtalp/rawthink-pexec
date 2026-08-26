@@ -149,26 +149,66 @@ Read the copy and confirm it can drive the pipeline:
 - [ ] A dependency order exists (explicit graph or stated ordering)
 - [ ] The plan contains NO implementation code
 
-**If `paths.design` is configured AND Step 0b found no predecessor**, also
-check the design inventory. Both conditions matter: the inventory exists for a
-first milestone on a project that had no source. Once a predecessor exists the
-project has source, plan mode derives anchors from it, and looking for an
-inventory that was never meant to be written would stop a milestone for a file
-nobody owes.
+### The greenfield check
 
-- the file exists
-- its status is not `PENDING`
-- every `Source:` anchor in the plan resolves — the file exists, and for a
-  `MODIFY` anchor the named symbol is in it
+**Presence is the trigger.** Resolve `paths.design` and `paths.skeleton_scope`
+against this milestone, and look:
 
-A configured-but-`PENDING` inventory means the plan was written before the
-design was settled, so its anchors were invented rather than derived. That is
-the failure this gate exists to catch, and it is invisible at every later step
-until `/spec-create` Step 5 goes looking for a file that was never there.
+- **Neither file exists** — skip this whole check. Normal for any milestone
+  after the first, and for a project that already had source when pexec was
+  adopted.
+- **Both exist** — run the three checks below.
+- **One exists and the other does not** — STOP and say which is missing. The
+  two are written as a pair by `/greenfield-init`; half a pair means one was
+  deleted or never written, and neither absence is safe to assume away.
 
-Skip this check if either condition is unmet. Leaving the two keys in
-`.pexec.yml` after the first milestone is harmless — the predecessor test
-retires the gate on its own, so nobody has to remember to delete them.
+Both paths must be `{milestone}`-scoped for this to work. If `skeleton_scope`
+points at a project-wide file while `design` is per-milestone, every later
+milestone sees a scope map with no inventory and stops on a half pair it was
+never supposed to have. Say so and stop, rather than guessing which one the
+project meant.
+
+Presence rather than a predecessor test, because "there is a predecessor" and
+"there is source" are not the same claim. A project can add a second, initially
+empty module at v3 — a closed-source counterpart, a new service — and that
+module is greenfield even though the project is not. Writing an inventory for
+it turns this check back on by itself.
+
+**Check 1 — both are signed.** Neither `{paths.skeleton_scope}` nor
+`{paths.design}` may still read `STATUS: PENDING`.
+
+A `PENDING` design inventory means the plan was written before the design was
+settled, so its anchors were invented rather than derived. A `PENDING` scope
+map means nobody confirmed what the skeleton deliberately left out — and the
+`## Left behind deliberately` list is worth exactly what its signature is worth.
+
+**Check 2 — every anchor in the plan resolves.** An anchor is mechanically
+defined, so this is checkable rather than a matter of judgement:
+
+- A **path anchor** is a backticked token containing `/` and a file extension:
+  `` `src/main/java/com/x/Ledger.java` ``. The file must exist.
+- A **symbol anchor** is a backticked identifier followed by the word `in` and
+  a path anchor: `` `Ledger.append()` `` in `` `src/.../Ledger.java` ``. The
+  file must exist and must contain the identifier — **stripped of `()` and of
+  any qualifier before the last dot**. `Ledger.append()` is satisfied by a file
+  containing `append`; the qualifier is there so a human can read the anchor
+  without opening the file, and matching on the qualified form would fail
+  against every language that does not repeat the type name at the definition
+  site.
+
+Report every anchor that does not resolve, with its phase number, and STOP.
+Bare type names with no path are not anchors and are not checked — they are
+also not enough, which `plan.template.md` says at the point where they get
+written.
+
+**Check 3 — the inventory and the plan agree on phases.** Every type in the
+inventory's phase column names a phase that exists in this plan, and every
+`CREATE` row's file appears in the plan's file list for that phase. A type
+assigned to a phase the plan does not contain is work nobody will do.
+
+The failure all three catch is invisible at every later step until
+`/spec-create` Step 5 goes looking for a file that was never there — four
+sessions and one wasted verify cycle downstream.
 
 If a check fails, report which one and STOP — with one exception.
 
@@ -216,6 +256,23 @@ project-specific slots by reading the repo:
 
 Ask the user rather than guessing when a slot has no obvious answer. A wrong
 rule here propagates into every spec of the milestone.
+
+**If `{paths.skeleton_scope}` exists**, read its `## Modules created` table and
+write the dependency direction into the project-specific BLOCKING rules slot,
+as:
+
+> An import from {module A} into {module B} is a BLOCKING violation. The
+> dependency runs {B} → {A} and not the other way.
+
+**Include test sources in the rule explicitly.** The walking slice needs a real
+implementation of everything it touches and the nearest one is often across the
+boundary, so the first violation on a split project is almost always a test
+wiring the far side in. A rule that says "sources" and means "main sources"
+will not catch it, and no build check that inspects main alone will either.
+
+A boundary that exists only in a README is not enforced by anything.
+`spec-verify` grades against these tiers; a rule that is not written here is a
+rule that is not checked.
 
 If the previous milestone's review has an `## External surface` section, write
 its entries into the project-specific BLOCKING rules slot, as:

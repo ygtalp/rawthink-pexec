@@ -15,8 +15,11 @@ DELETE THIS BLOCK, INCLUDING BOTH MARKERS, WHEN GENERATING.
 Written ONCE, for the first milestone of a greenfield project, between the
 derivation document and plan mode.
 
-`/plan-init` refuses to run while this file is `PENDING`, if `paths.design` is
-configured.
+`/plan-init` refuses to run while this file is `PENDING`, and checks that every
+anchor in the plan resolves against real files. It looks for this file by
+presence, not by milestone number: writing one for a later milestone — a new
+module that starts empty, a closed-source counterpart — turns the check back on
+for that milestone by itself.
 
 ## Why this exists
 
