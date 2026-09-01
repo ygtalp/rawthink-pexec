@@ -55,8 +55,15 @@ Look for a milestone map and a derivation document for the first milestone.
 
 - **Both present** — good. Name them in the report; the scope map is filled
   from them.
-- **Map missing** — say so and continue. A scope map can be built from a
-  derivation document alone; it will just have no sequence around it.
+- **Derivation document missing, map present** — the normal case. The skeleton
+  is drawn before the first milestone is argued, so the map is usually all that
+  exists at this point. Fill the scope map from the map's first milestone row
+  and its verified facts, and say in the report that the derivation document
+  was not available. Do not wait for it: the design inventory is filled after
+  the skeleton exists, and by then the derivation document will.
+- **Map missing, derivation document present** — say so and continue. A scope
+  map can be built from a derivation document alone; it will just have no
+  sequence around it.
 - **Both missing** — STOP. There is nothing to draw a skeleton from, and a
   skeleton drawn from nothing is an architecture invented at the worst possible
   moment. Point at `milestone-map.template.md` and
