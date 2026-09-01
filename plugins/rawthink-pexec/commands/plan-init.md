@@ -235,7 +235,20 @@ at least one phase's `Requirements:` line.
   stop. Either the map is stale or the plan has taken on work from a later
   milestone, and both are worth a sentence before phase 1.
 
-Report the counts: assigned / covered / uncovered.
+**Read the Requirements cell as full IDs.** `SUB-01, SUB-04, SUB-05` is three;
+`SUB-01,04,05` is one ID and two fragments, and reading it as three requires
+guessing at a prefix. If a cell uses the shortened form, STOP and say so — do
+not expand it yourself. A coverage check that repairs its own input is a check
+that cannot fail, and this one exists to fail.
+
+**Count only the tables under the map's `## Requirements` heading.** The
+`## Out of scope` table has the same row shape and is not part of the
+requirement set.
+
+Report the counts: assigned / covered / uncovered. **They must reconcile with
+the map's own Coverage block** — if this command's *assigned* differs from the
+map's, one of the two read a cell differently, and that difference is the
+finding, not a rounding detail.
 
 **Clarity.** Every phase answers the four clarity questions, and **every `no`
 has a matching row in the plan's `Unverified assumptions` table.** A `no` with

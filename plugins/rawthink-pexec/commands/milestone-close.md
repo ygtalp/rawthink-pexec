@@ -44,6 +44,9 @@ Produce three lists:
 - **Carried by a PARTIAL or HALTED phase** — named separately, because the
   reason differs and so does what happens next
 
+Read IDs in their full form — `SUB-01, SUB-04` is two, `SUB-01,04` is one and a
+fragment. A shortened cell is reported, not expanded.
+
 These lists go into the review and then into the map, where the Status column
 and the coverage counts get updated. **This command does not edit the map** —
 it produces what the map's owner writes, the same way the rest of Step 6 works.

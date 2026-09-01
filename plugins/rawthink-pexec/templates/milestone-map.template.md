@@ -111,6 +111,12 @@ commitments and are structurally nothing of the sort.
 
 ### Coverage
 
+**Count only the tables under `## Requirements`.** The `## Out of scope` table
+below uses the same row shape — an ID, then prose — so anything that scans the
+whole file for ID-shaped rows counts them too and reports a total that is
+larger than the requirement set. Two tables, two counts, and the sum of them is
+not a number that means anything.
+
 | | Count |
 |---|---|
 | Total requirements | |
@@ -118,6 +124,11 @@ commitments and are structurally nothing of the sort.
 | **Unassigned** | **⚠ if > 0** |
 | Satisfied | |
 | Dropped (with reason below) | |
+
+The counts must reconcile: **assigned + unassigned = total**, and the sum of
+the ID counts across every milestone's Requirements cell equals *assigned*. If
+those two disagree, one of them was read from a shortened cell — see the
+Requirements column rule below.
 
 **An unassigned requirement is the finding.** It is not a to-do; it is a
 capability nobody owns. Either assign it to a milestone or move it to
@@ -148,6 +159,14 @@ Each row becomes one derivation document, then one plan, then one `/plan-init`.
 a milestone's plan covers what the map assigned to it, and what lets
 `/milestone-close` mark requirements satisfied. A milestone with an empty
 Requirements cell delivers nothing that anyone is counting.
+
+**Write every ID in full, comma-separated: `SUB-01, SUB-04, SUB-05`.** Not
+`SUB-01,04,05`. The shortened form is the natural thing to write — it is
+shorter, it reads fine, and a person parses it without noticing — which is
+exactly why it is dangerous: anything scanning for IDs finds one where there
+are three, reports full coverage, and the gap this column exists to catch
+passes silently. Prefer a long cell to a short one; the cell is read by a
+counter more often than by a person.
 | v2 | {name} | {what is true after} | {N} e-wk | {span} | v1 |
 
 **Load check:** divide estimate by calendar weeks. A row above 1.0
