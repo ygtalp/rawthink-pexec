@@ -12,6 +12,13 @@ No command reads this file. Like the derivation document, it is written and read
 by people. It is here because the pipeline needs an upstream that holds still,
 and because `/milestone-close` produces findings that have to land somewhere.
 
+**Keep the explanatory prose when you fill this in.** This template has no
+`TEMPLATE-HEADER` block to strip: every section below, including the short
+paragraphs under each heading, is part of the artifact. They are what make the
+file usable by someone who did not write it — and by you, a year later, when
+the reason a column exists has stopped being obvious. Only the `{placeholder}`
+text gets replaced.
+
 ## Why this exists
 
 A derivation document scopes ONE milestone. Nothing scopes the sequence.
@@ -127,6 +134,12 @@ unchanged.
 lost cannot be made — you are back to rediscovering the alternatives before you
 can choose between them. This is the single most common way an open decision
 becomes permanently open.
+
+**If the options are not known yet, that is the finding — write it.**
+`unknown — enumerate the options before deciding` is a valid entry and an
+honest one; a blank cell is neither. It says the same thing while looking like
+an oversight, and the next reader cannot tell whether the options were lost or
+never existed.
 
 Record each of these in the decision archive as an open question. This file is
 read by people; the archive is what a planning session queries.

@@ -3,7 +3,7 @@
   "owner": { "name": "Yigit Alp Unal" },
   "metadata": {
     "description": "Workflow tooling for Claude Code — phase-by-phase execution with independent verification gates.",
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "plugins": [
     {

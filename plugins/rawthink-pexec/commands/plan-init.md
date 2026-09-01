@@ -182,8 +182,18 @@ settled, so its anchors were invented rather than derived. A `PENDING` scope
 map means nobody confirmed what the skeleton deliberately left out — and the
 `## Left behind deliberately` list is worth exactly what its signature is worth.
 
-**Check 2 — every anchor in the plan resolves.** An anchor is mechanically
-defined, so this is checkable rather than a matter of judgement:
+**Check 2 — every anchor in a PHASE ENTRY resolves.** Scope this to the
+`Source:` and `Key files:` lines inside each phase; do not scan the whole
+document.
+
+The rest of the plan legitimately names files that do not exist yet. The
+guardrail section points at `{core_rules}` and `{lessons}`, and Steps 6 and 7
+of this command are what create them — checking them here rejects a correctly
+written plan for a file this command is about to write. Anything outside a
+phase entry is prose, not an anchor.
+
+An anchor is mechanically defined, so this is checkable rather than a matter of
+judgement:
 
 - A **path anchor** is a backticked token containing `/` and a file extension:
   `` `src/main/java/com/x/Ledger.java` ``. The file must exist.
@@ -326,8 +336,16 @@ correctness bug, a performance regression, a data migration — a baseline
 measurement is MANDATORY. Once the fix lands, "how broken was it really?" has
 no answer.
 
-Leave it marked `STATUS: PENDING`. `/spec-create` refuses phase 1 until a human
-marks it `COMPLETE`.
+**Separate claims from open decisions.** Step 3 is for things that can be
+settled by running something. A row that reads "decide X" is not a claim — it
+is an open decision, and it belongs in Step 4 as its own checkbox with the
+milestone it is due in. Mixing the two produces a claim-verification table
+whose rows cannot be checked by anything, which is how a table ends up signed
+with most of it unresolved.
+
+Leave it marked `STATUS: PENDING`. `/spec-create` refuses phase 1 until every
+row in Steps 3 and 4 has an outcome AND a human marks it `COMPLETE`. Both
+conditions — the signature alone was never meant to be the gate.
 
 Generated files must contain no template instructions. If the words "template"
 or "slot" survive into `{core_rules}` or `{lessons}`, the strip step was missed.

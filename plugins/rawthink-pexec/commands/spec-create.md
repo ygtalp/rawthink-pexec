@@ -35,8 +35,24 @@ If `{active}` carries three or more `verify FAILED` lines for phase {N}, STOP.
 Three rejections is not a spec problem — the phase scope is probably wrong, and
 that is a question for the plan, not another rewrite.
 
-If `{N}` is the first phase, read `{preflight}`. If its status is not
-`COMPLETE`, STOP and tell the user which pre-flight items are outstanding.
+If `{N}` is the first phase, read `{preflight}` and check TWO things:
+
+1. **Status is `COMPLETE`.**
+2. **No row is blank.** Every row in the claim-verification table has one of
+   `HOLDS` / `FALSE` / `ACCEPTED AS RISK`, and every open-decision checkbox is
+   ticked with an outcome.
+
+STOP on either, and say which rows are outstanding.
+
+The second check is not redundant. A status line is one keystroke and a table
+is twenty rows; signing the first without finishing the second is the normal
+way this gate fails, and it fails silently — the milestone starts, and the
+unchecked claim surfaces in phase 6 as a bug nobody can trace to a decision.
+
+Report the `ACCEPTED AS RISK` count in your own report even when you proceed.
+Phase 1 starting on four accepted risks is a fact the next steps should be able
+to read without opening the pre-flight file.
+
 Baseline measurements cannot be taken after the fix lands.
 
 ## Step 1: Read the plan section

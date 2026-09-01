@@ -281,6 +281,14 @@ They bracket the milestone. Pre-flight blocks `/spec-create 1` until state that
 cannot be recovered later has been captured. The milestone review blocks the
 NEXT `/plan-init` until someone confirms what actually happened.
 
+**A signature is not the gate.** `/spec-create` checks the status line *and*
+that no pre-flight row is still blank, because a status line is one keystroke
+and the table it stands for is twenty rows. Every claim ends in `HOLDS`,
+`FALSE — plan corrected`, or `ACCEPTED AS RISK` with a named person and a named
+consequence; every open decision is decided. The third outcome is how a claim
+that genuinely cannot be settled yet survives into phase 1 — visibly, counted
+in the sign-off, rather than as a blank cell that reads as verified.
+
 The symmetry is the design. A milestone that starts without a baseline cannot
 prove it worked; a milestone planned on an unreviewed close is planned on an
 agent's unchecked report. Both failures are silent, and both surface far

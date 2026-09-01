@@ -14,6 +14,11 @@ does not carry, and why. One line each.
 Written BEFORE the plan, in a session that can search. The plan is derived from
 this; nothing in the pipeline reads this file again.
 
+**Keep the explanatory prose.** This template has no `TEMPLATE-HEADER` block to
+strip — the paragraphs under each heading are part of the artifact, and they
+are what tell the next reader why a section exists. Only `{placeholder}` text
+gets replaced.
+
 ## Why this exists
 
 Plan mode derives structure from live source: file layout, symbol names, the
