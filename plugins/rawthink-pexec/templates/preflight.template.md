@@ -43,14 +43,17 @@ them separate belongs in the plan.
 Populated by `/plan-init` from the plan's **Unverified assumptions** table, plus
 anything carried forward from the previous milestone's review.
 
-| Assumption | How to check it | Outcome |
-|---|---|---|
-| {claim} | {command or test} | {one of the three below} |
+| Assumption | How to check it | Evidence | Outcome |
+|---|---|---|---|
+| {claim} | {command or test} | {what was run and what it returned} | {one of the three below} |
 
 **Every row ends in exactly one of three outcomes. There is no fourth, and
 there is no blank.**
 
-- **`HOLDS`** — checked by running something. Say what was run.
+- **`HOLDS`** — checked by running something. **The Evidence cell carries the
+  command and its result**, or the file path and the line that settles it. A
+  `HOLDS` with an empty Evidence cell is not `HOLDS`; it is an opinion in the
+  shape of a result, and it is indistinguishable from one six weeks later.
 - **`FALSE — plan corrected: {what changed}`** — the check failed and the plan
   was fixed. Record the correction here; a plan quietly edited after a failed
   check loses the fact that the check happened.
@@ -70,9 +73,14 @@ belongs in the sign-off below where it can be read at a glance rather than
 inferred from a table nobody re-opens.
 
 - [ ] Every row has one of the three outcomes — no blanks
+- [ ] Every row has a non-empty Evidence cell. For `ACCEPTED AS RISK`, the
+      evidence is **why it could not be settled** — "vendor has not replied,
+      asked 12 Aug", not silence
 - [ ] Every `HOLDS` was reached by RUNNING something, not by reading
       documentation
 - [ ] Every `ACCEPTED AS RISK` names a person and a consequence
+- [ ] Every consequence is concrete. "Could cause issues" is not a consequence;
+      "the open verifier accepts a tampered chain" is
 
 An empty table means the plan declared no unverified assumptions. Confirm that
 is true, rather than that nobody filled it in.
@@ -105,6 +113,7 @@ that a milestone's real starting position is readable in one line.
 | | Count |
 |---|---|
 | Claims checked, `HOLDS` | |
+| Rows with empty Evidence | **must be 0** |
 | Claims `FALSE`, plan corrected | |
 | Claims `ACCEPTED AS RISK` | |
 | Open decisions closed | |

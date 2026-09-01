@@ -1,6 +1,6 @@
 {
   "name": "rawthink-pexec",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Phase-by-phase execution for AI coding agents. Six commands, one contract per phase, a verification gate the implementer cannot skip, and two manual gates bracketing the milestone, plus a greenfield bootstrap for projects with no code yet. No runtime, no dependencies.",
   "author": { "name": "Yigit Alp Unal" },
   "repository": "https://github.com/ygtalp/rawthink-pexec",

@@ -8,6 +8,10 @@ in-pipeline, and nothing else. Decisions and open questions come from the
 archive, not from the map — the map is read by people, the archive by planning
 sessions.
 **Sources:** {transcripts, audits, specs, vendor docs — name them}
+**Requirements:** the map IDs assigned to this milestone. Carry the list
+verbatim — this document is where they enter the milestone, and the plan's
+per-phase `Requirements:` lines are checked against it.
+
 **Left behind deliberately:** what the map's row mentions that this document
 does not carry, and why. One line each.
 

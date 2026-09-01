@@ -151,6 +151,17 @@ Above the plan sit documents that no command reads. They are written and read
 by people, and they are here because the pipeline needs an upstream that holds
 still.
 
+**Requirements have IDs, and the IDs are counted.** The milestone map gives
+every capability an ID, assigns it to a milestone, and keeps a coverage line
+with an unassigned count. `/plan-init` refuses a plan that leaves an assigned
+ID uncovered; `/milestone-close` reports which IDs a milestone satisfied.
+
+This exists because a capability named in a paragraph and never given an ID can
+quietly fail to appear in any milestone, and nothing reports it — component
+lists, architecture layers and mandatory-interface lists read as delivery
+commitments and are structurally nothing of the sort. An ID is what makes a
+lost capability findable.
+
 The **milestone map** (`templates/milestone-map.template.md`) answers which
 milestones exist, in what order, and what constrains them. One row becomes one
 derivation document. It is also where `/milestone-close` findings land — the
@@ -288,6 +299,20 @@ and the table it stands for is twenty rows. Every claim ends in `HOLDS`,
 consequence; every open decision is decided. The third outcome is how a claim
 that genuinely cannot be settled yet survives into phase 1 — visibly, counted
 in the sign-off, rather than as a blank cell that reads as verified.
+
+**And every row carries its evidence.** A `HOLDS` with an empty evidence cell
+is an opinion in the shape of a result — six weeks later nobody can tell the
+two apart. For an accepted risk, the evidence is why it could not be settled.
+
+## A phase can halt
+
+A phase that ran, answered its question, and returned an answer that blocks the
+work it was gating is marked `Status: HALTED` — a success, not a failure. It
+propagates: `/spec-create` stops on a halted dependency rather than speccing
+work whose premise just failed, and `/milestone-close` reports the chain as
+blocked rather than as ordinary incomplete work. The two need different
+responses, and reporting one as the other hands the next planner a false
+problem.
 
 The symmetry is the design. A milestone that starts without a baseline cannot
 prove it worked; a milestone planned on an unreviewed close is planned on an

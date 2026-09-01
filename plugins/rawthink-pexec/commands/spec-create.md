@@ -41,8 +41,11 @@ If `{N}` is the first phase, read `{preflight}` and check TWO things:
 2. **No row is blank.** Every row in the claim-verification table has one of
    `HOLDS` / `FALSE` / `ACCEPTED AS RISK`, and every open-decision checkbox is
    ticked with an outcome.
+3. **No evidence cell is empty.** A `HOLDS` with nothing in Evidence is an
+   opinion in the shape of a result; for an accepted risk, the evidence is why
+   it could not be settled.
 
-STOP on either, and say which rows are outstanding.
+STOP on any of the three, and say which rows are outstanding.
 
 The second check is not redundant. A status line is one keystroke and a table
 is twenty rows; signing the first without finishing the second is the normal
@@ -60,6 +63,11 @@ Baseline measurements cannot be taken after the fix lands.
 Search `{plan}` for Phase {N}. Read only those lines: scope, goal, key files,
 validation criteria, noted traps.
 
+**Carry the phase's `Requirements:` line into the spec's provenance section.**
+It is what `/post-phase` writes into the summary and what `/milestone-close`
+reads to mark requirements satisfied. An ID that never reaches the summary is
+an ID nothing can close.
+
 ## Step 2: Read dependency summaries
 
 Identify the phases this one depends on. For each, read
@@ -67,6 +75,20 @@ Identify the phases this one depends on. For each, read
 
 If a summary is missing for a phase that IS a dependency, tell the user and
 STOP. Implementing against an unrecorded dependency means guessing at its API.
+
+**Check the Status line of every dependency summary.** If any dependency —
+directly, or through a chain of dependencies — has `Status: HALTED`, STOP.
+Report which phase halted, the question it answered, and the answer, and name
+the chain that leads from it to this phase.
+
+This phase is **blocked**, not failed and not late. A halted dependency means
+the premise this phase was going to build on did not survive contact with
+reality. Writing a spec anyway produces work that is coherent and pointless,
+and it is cheaper to say so now than to discover it in verification.
+
+What happens next is a human decision — replan the milestone, cut this phase,
+or take the fix-or-cut route the plan named for the halted phase. None of those
+is `/spec-create`'s call.
 
 If this phase has no dependencies — normally the first phase of a milestone —
 there is nothing to read here. An empty `{summaries}` directory is expected at
@@ -119,6 +141,17 @@ these — which is exactly why reading them here matters.
 - The previous completed phase's summary, as a depth and tone reference — if
   one exists. For the first phase of a milestone there is none; `{core_rules}`
   alone is the format authority, and the section list below is the contract.
+
+**If `{core_rules}` has a prohibitions table**, take every `resolved`/`test`
+row that touches this phase and write it into the spec's validation criteria as
+a **negative criterion** — a check that fails if the forbidden thing is
+present. A `resolved`/`judgment` row goes in as a criterion the verifier reads
+for and answers explicitly.
+
+The plan's `Must NOT:` line names which prohibitions apply to this phase. If it
+names one the core rules do not carry, say so: the two disagree, one of them is
+stale, and a prohibition that exists in only one of them is enforced by
+neither.
 
 ## Step 5: Read real source (API verification)
 

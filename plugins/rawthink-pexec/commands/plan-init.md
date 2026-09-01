@@ -220,6 +220,35 @@ The failure all three catch is invisible at every later step until
 `/spec-create` Step 5 goes looking for a file that was never there — four
 sessions and one wasted verify cycle downstream.
 
+### Coverage and clarity checks
+
+**Requirement coverage.** Read the milestone map's Requirements table and take
+every ID whose Milestone column names this milestone. Each one must appear in
+at least one phase's `Requirements:` line.
+
+- **Uncovered ID** — STOP, and name it. The map assigned it here and the plan
+  does not deliver it; that is the gap this join exists to catch.
+- **Phase with an empty `Requirements:` line** — STOP. `none — infrastructure`
+  is a valid answer; blank is not, because blank and "forgot" are the same
+  character.
+- **ID in the plan that the map does not assign here** — report it, do not
+  stop. Either the map is stale or the plan has taken on work from a later
+  milestone, and both are worth a sentence before phase 1.
+
+Report the counts: assigned / covered / uncovered.
+
+**Clarity.** Every phase answers the four clarity questions, and **every `no`
+has a matching row in the plan's `Unverified assumptions` table.** A `no` with
+no assumption row is ambiguity that was noticed and then dropped — worse than
+ambiguity that was never examined, because the plan now looks checked.
+
+STOP on an unanswered question or an unrouted `no`.
+
+**Prohibitions.** If `{core_rules}` has a prohibitions table, every
+`resolved`/`test` row appears as a `Must NOT:` criterion in each phase it
+touches. STOP on a prohibition that no phase carries — it is a rule the
+project believes in and nothing runs.
+
 If a check fails, report which one and STOP — with one exception.
 
 **If the document is plan-shaped but at the wrong altitude** — one task's
@@ -284,6 +313,16 @@ A boundary that exists only in a README is not enforced by anything.
 `spec-verify` grades against these tiers; a rule that is not written here is a
 rule that is not checked.
 
+**Fill the prohibitions table.** Every blocking rule that is a must-NOT gets a
+row: what it forbids, which requirement or architectural claim it protects, and
+whether a test can check it or only judgment can. Take the `Protects` column
+from the milestone map's requirement IDs where one applies; write
+`architecture` where the thing protected is a structural claim with no ID.
+
+Then write the coverage line. A prohibition with `⚠ UNRESOLVED` status goes
+into the plan's `Unverified assumptions` — it is a rule the project believes in
+and cannot currently check, which is exactly what that table is for.
+
 If the previous milestone's review has an `## External surface` section, write
 its entries into the project-specific BLOCKING rules slot, as:
 
@@ -335,6 +374,11 @@ changes anything whose "before" state becomes unrecoverable once fixed — a
 correctness bug, a performance regression, a data migration — a baseline
 measurement is MANDATORY. Once the fix lands, "how broken was it really?" has
 no answer.
+
+**Carry the milestone's requirement IDs into Step 5 (project-specific).** One
+checkbox per ID assigned to this milestone, so that pre-flight and close read
+against the same list. This is not duplication: the plan says which phase
+covers an ID, pre-flight says the list was seen before phase 1 started.
 
 **Separate claims from open decisions.** Step 3 is for things that can be
 settled by running something. A row that reads "decide X" is not a claim — it

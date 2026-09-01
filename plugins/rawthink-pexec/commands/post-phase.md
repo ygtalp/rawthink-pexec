@@ -51,6 +51,20 @@ entities, services, configs, migrations and tests; verify signatures against
 source. The summary becomes the input for every later phase — a summary copied
 from the spec propagates the spec's errors forward instead of catching them.
 
+**Set the Status line honestly.** `COMPLETE`, `PARTIAL ({K} incomplete)`, or
+**`HALTED`**.
+
+Use HALTED when the phase ran, answered the question it existed to answer, and
+the answer means the work it was gating cannot proceed. Add the two-line
+`## Halted` block from `{core_rules}`: the question and the answer. This is a
+success — the phase did its job — and marking it PARTIAL instead hides a
+blocked chain behind what looks like ordinary unfinished work.
+
+**Write the Requirements line** from the spec's provenance: the map IDs this
+phase covered, or `none — infrastructure`. `/milestone-close` reads this line
+to mark requirements satisfied; an ID that never reaches a summary cannot be
+closed by anything.
+
 ## Step 5: Record the decision (if `optional_mcp.rawthink` is enabled)
 
 Record a structured decision entry for this phase:

@@ -86,13 +86,68 @@ Recalibrate against real hours after the first milestone and update this line.
 An estimate that is never checked against a measurement is a guess with a number
 on it.
 
+## Requirements
+
+Every capability this map names, given an ID. **The ID is what makes a lost
+capability findable.** A capability described in a paragraph and never given an
+ID is a capability that can quietly fail to appear in any milestone — and
+nothing will report it, because nothing was counting.
+
+Group by area. Keep IDs stable forever: an ID is a handle, not a position.
+
+### {AREA}
+
+| ID | Requirement | Milestone | Status |
+|---|---|---|---|
+| {AREA}-01 | {what must be true, checkable} | {v1 \| — } | open \| satisfied \| dropped |
+| {AREA}-02 | {…} | | |
+
+**Write one row per capability, not per feature description.** If a paragraph
+elsewhere in this map names something the system must be able to do — a
+component, a guarantee, a surface — it needs a row here. Component lists,
+architecture layers and mandatory-interface lists are the usual sources, and
+they are the usual place capabilities go missing: they read as delivery
+commitments and are structurally nothing of the sort.
+
+### Coverage
+
+| | Count |
+|---|---|
+| Total requirements | |
+| Assigned to a milestone | |
+| **Unassigned** | **⚠ if > 0** |
+| Satisfied | |
+| Dropped (with reason below) | |
+
+**An unassigned requirement is the finding.** It is not a to-do; it is a
+capability nobody owns. Either assign it to a milestone or move it to
+`## Out of scope` with a reason — those are the only two resolutions.
+
+**Dropped requirements keep their row.** Deleting the row loses the fact that
+the capability was considered; the ID stays, the status becomes `dropped`, and
+the reason goes in Out of scope.
+
+## Out of scope
+
+Explicitly excluded. This is what keeps a dropped requirement from returning as
+a proposal in three months.
+
+| Requirement / capability | Reason | Reopen if |
+|---|---|---|
+| {ID or name} | {why not} | {what would change the answer} |
+
 ## Milestones
 
 Each row becomes one derivation document, then one plan, then one `/plan-init`.
 
-| # | Milestone | Delivers | Est. | Calendar | Depends on |
-|---|---|---|---|---|---|
-| v1 | {name} | {what is true after} | {N} e-wk | {span} | — |
+| # | Milestone | Delivers | Requirements | Est. | Calendar | Depends on |
+|---|---|---|---|---|---|---|
+| v1 | {name} | {what is true after} | {AREA-01, AREA-02} | {N} e-wk | {span} | — |
+
+**The Requirements column is the join.** It is what lets `/plan-init` check that
+a milestone's plan covers what the map assigned to it, and what lets
+`/milestone-close` mark requirements satisfied. A milestone with an empty
+Requirements cell delivers nothing that anyone is counting.
 | v2 | {name} | {what is true after} | {N} e-wk | {span} | v1 |
 
 **Load check:** divide estimate by calendar weeks. A row above 1.0

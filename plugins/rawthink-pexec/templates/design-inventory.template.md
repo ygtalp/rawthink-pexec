@@ -138,8 +138,18 @@ them is wrong.
 **Required.** Copied into the plan's `Unverified assumptions` table, then into
 pre-flight Step 3, where each is checked by running something before phase 1.
 
-| Design decision | The assumption under it | What breaks if false |
-|---|---|---|
+| Design decision | The assumption under it | Evidence for it | What breaks if false |
+|---|---|---|---|
+
+**Evidence is what the assumption currently rests on** — the walking slice test
+that passed, the file that shows the pattern, the vendor page that was read.
+Write `none` where there is none: an assumption with no evidence is the highest
+priority row in pre-flight, and it can only be prioritised if it is visible.
+
+**Every consequence is concrete.** "Could cause issues" is not a consequence;
+"`X-core`'s central interface changes and every phase touches it" is. A vague
+consequence cannot be weighed against the cost of checking it, so it never gets
+checked.
 
 At least one row is expected. A design derived from a skeleton inherits every
 assumption the skeleton made — starting with the assumption that whatever the

@@ -33,6 +33,29 @@ nothing to close.
 If `{review}` already exists, STOP. Closing twice overwrites the record of the
 first close.
 
+## Step 0b: Requirements and blocked chains
+
+**Requirements.** Read the milestone map's Requirements table for the IDs
+assigned to this milestone, then read every summary's `Requirements:` line.
+Produce three lists:
+
+- **Satisfied** — the ID appears in a summary whose Status is COMPLETE
+- **Not satisfied** — assigned here, no COMPLETE summary carries it
+- **Carried by a PARTIAL or HALTED phase** — named separately, because the
+  reason differs and so does what happens next
+
+These lists go into the review and then into the map, where the Status column
+and the coverage counts get updated. **This command does not edit the map** —
+it produces what the map's owner writes, the same way the rest of Step 6 works.
+
+**Blocked chains.** For every summary with `Status: HALTED`, walk `Depends on`
+forward and list every phase blocked by it, directly or through a chain.
+
+Report these as **blocked**, never as incomplete. The difference matters:
+incomplete work resumes, blocked work needs a decision — replan, cut, or take
+the halted phase's fix-or-cut route. A milestone that closes with a blocked
+chain reported as "3 phases incomplete" hands the next planner a false problem.
+
 ## Step 1: What was built
 
 Read every file in `{summaries}/`, in phase order. Read `{memory_md}`.
@@ -143,6 +166,11 @@ owner's call, and a recommendation written here arrives in the map as a fact.
 
 If nothing changes the map, say so. That is a real and common outcome, and
 stating it is what makes the section trustworthy when it is not empty.
+
+**Requirements and blocked chains go in too** — the three requirement lists
+from Step 0b and the blocked chains, each with the halted phase that caused it.
+These are what the map absorbs; leaving them in the report and out of the
+review means they exist only until the session ends.
 
 ## Step 7: Write the review
 

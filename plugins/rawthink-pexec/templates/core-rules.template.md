@@ -36,6 +36,34 @@ file — keep the boundary, or the two files drift into contradicting each other
 8. {{project-specific blocking rules — backward compatibility, safety
    invariants, regulatory constraints}}
 
+### Prohibitions — what must NOT happen
+
+Each blocking rule above that is a **prohibition** — a thing the system must
+never do — gets a row here. A prohibition written only as prose is a rule
+nobody runs; a prohibition bound to a requirement and a verification method is
+a criterion the verifier iterates over.
+
+| Prohibition (must-NOT) | Protects | Verification | Status |
+|---|---|---|---|
+| {MUST NOT …} | {REQ-ID or "architecture"} | test \| judgment | resolved \| dismissed \| ⚠ UNRESOLVED |
+
+- **Protects** — which requirement or architectural claim collapses if this is
+  violated. A prohibition that protects nothing is either not a prohibition or
+  the thing it protects has no ID yet.
+- **Verification: `test`** — a `resolved`/`test` row becomes a **negative
+  acceptance criterion** in every phase it touches; the verifier runs it.
+  **`judgment`** — no automatic check exists; the verifier reads for it and
+  says so explicitly.
+- **`dismissed`** carries a required non-empty reason. **`⚠ UNRESOLVED`** rows
+  are not neutral: the planner must carry each one into the plan's
+  `## Unverified assumptions`, because an unresolved prohibition is a rule the
+  project believes in and cannot check.
+
+**Coverage:** {resolved}/{applicable} resolved · {unresolved} unresolved
+
+A prohibition list with no coverage line is a list nobody is counting, which is
+the same failure the requirement IDs exist to prevent one level up.
+
 ### STRONG PREFERENCE — justify in writing if missing
 
 1. Validation criteria: 15+, each measurable
@@ -112,8 +140,9 @@ triggered is too broad. Adjust after a few phases.
 # Phase {N} Summary — {name}
 
 **Commit:** {hash}
-**Status:** COMPLETE | PARTIAL ({K} incomplete)
+**Status:** COMPLETE | PARTIAL ({K} incomplete) | **HALTED**
 **Build:** {compile result} | {test result}
+**Requirements:** {IDs this phase covered, or "none — infrastructure"}
 
 ## What changed (1 paragraph)
 
@@ -134,6 +163,23 @@ triggered is too broad. Adjust after a few phases.
 ## Note for the next phase
 - {what phase N+1 can rely on}
 ```
+
+**`HALTED` is a designed stop, not a failure.** The phase ran, answered its
+question, and the answer means the work it was gating cannot proceed — a spike
+that returns "no" is the clearest case. When Status is HALTED, the summary adds
+two lines and nothing else changes:
+
+```
+## Halted
+- **Question:** {what this phase was answering}
+- **Answer:** {what came back, and what it blocks}
+```
+
+Every phase that depends on a halted phase — directly or through a chain — is
+**blocked**. `/spec-create` stops rather than writing a spec whose premise just
+failed, and `/milestone-close` reports the chain as blocked rather than as
+ordinary incomplete work. Any Status other than HALTED, including a missing
+one, reads as ordinary.
 
 **Build the summary from the changed files, not from the spec.** It is the
 input to every later phase; copying the spec propagates the spec's errors

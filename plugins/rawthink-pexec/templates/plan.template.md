@@ -120,7 +120,13 @@ If this milestone fixes a correctness or performance defect, capture the
   anchor in two parts instead: the design inventory row the type comes from,
   and a path anchor for the real file this phase attaches it to. If neither
   exists, the phase is not ready to be planned.
-- **Depends on:** phases this one needs, or "none".
+- **Requirements:** the map IDs this phase covers, or `none — infrastructure`.
+  Every ID the map assigned to this milestone appears against at least one
+  phase; `/plan-init` counts them and stops on a gap. An infrastructure phase
+  that covers no requirement says so explicitly — the difference between
+  "covers nothing" and "forgot to write it" is not recoverable later.
+- **Depends on:** phases this one needs, or "none". A dependency that finished
+  `halted` blocks this phase — see the halted note below.
 - **Goal:** one sentence. What is true when this phase is done.
 - **What to do:**
   - The change, described at the level of intent, not implementation.
@@ -132,6 +138,19 @@ If this milestone fixes a correctness or performance defect, capture the
   file when `/plan-init` runs.
 - **Validation:** measurable criteria, 15+ preferred. Each one either passes or
   fails — "works correctly" is not a criterion.
+- **Must NOT:** the prohibitions from `{core_rules}` that apply to this phase,
+  each written as a negative criterion the verifier can check. A prohibition
+  that is never turned into a criterion is a rule nobody runs.
+- **Clarity check:** four yes/no questions, answered honestly. **Any `no`
+  becomes a row in `## Unverified assumptions`** — that is the whole mechanism;
+  the questions exist to route ambiguity into the assumption pipeline rather
+  than to produce a grade.
+  - *Goal* — is it a state change with a before and an after, rather than
+    "improve X"?
+  - *Boundaries* — is there an explicit out-of-scope line for this phase?
+  - *Constraints* — named, or explicitly "none beyond project conventions"?
+  - *Validation* — does every criterion resolve to pass or fail, with no
+    "works well" or "looks reasonable"?
 - **Fix-or-cut:** for risky phases, what happens if it cannot be finished this
   cycle. An honestly removed feature is defensible; a half-finished one is not.
 
@@ -140,6 +159,23 @@ If this milestone fixes a correctness or performance defect, capture the
 (same shape)
 
 ---
+
+## A dependency that halted
+
+A phase can finish `halted`: it ran, it answered its question, and the answer
+means the work it was gating cannot proceed. A spike that returns "no" is the
+clearest case. **That is a success, not a failure** — the phase did exactly
+what it was for.
+
+Halted propagates over `Depends on`. Every phase that depends on a halted
+phase, directly or through a chain, is **blocked**: `/spec-create` stops rather
+than writing a spec for work whose premise just failed, and `/milestone-close`
+reports it as blocked rather than as ordinary incomplete work.
+
+**Plan for it where the risk is real.** If a phase exists to answer a question
+that could come back "no", say in its `Fix-or-cut` what the milestone does
+then. A blocked chain discovered at close is a surprise; a blocked chain with a
+written answer is a decision.
 
 ## Phase Execution Order
 
